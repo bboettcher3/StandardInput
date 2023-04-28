@@ -2,32 +2,32 @@
 #include "PluginEditor.h"
 
 //==============================================================================
-AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor (AudioPluginAudioProcessor& p)
-    : AudioProcessorEditor (&p), processorRef (p)
-{
-    juce::ignoreUnused (processorRef);
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (400, 300);
+AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudioProcessor& p)
+    : AudioProcessorEditor(&p), processorRef(p) {
+  juce::ignoreUnused(processorRef);
+
+  addAndMakeVisible(mHeader);
+  addAndMakeVisible(mLooper);
+  addAndMakeVisible(mKeyboard);
+  addAndMakeVisible(mMouse);
+
+  setSize(800, 500);
 }
 
-AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor()
-{
-}
+AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor() {}
 
 //==============================================================================
-void AudioPluginAudioProcessorEditor::paint (juce::Graphics& g)
-{
-    // (Our component is opaque, so we must completely fill the background with a solid colour)
-    g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
-
-    g.setColour (juce::Colours::white);
-    g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
+void AudioPluginAudioProcessorEditor::paint(juce::Graphics& g) {
+  // (Our component is opaque, so we must completely fill the background with a solid colour)
+  g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
 }
 
-void AudioPluginAudioProcessorEditor::resized()
-{
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+void AudioPluginAudioProcessorEditor::resized() { 
+  juce::Rectangle<int> r = getLocalBounds(); 
+
+  mHeader.setBounds(r.removeFromTop(75));
+  juce::Rectangle<int> keyMousePanel = r.removeFromBottom(175);
+  mLooper.setBounds(r);
+  mKeyboard.setBounds(keyMousePanel.removeFromLeft(keyMousePanel.getWidth() / 2));
+  mMouse.setBounds(keyMousePanel);
 }
