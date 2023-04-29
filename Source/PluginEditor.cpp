@@ -8,9 +8,11 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
 
   addAndMakeVisible(mHeader);
   addAndMakeVisible(mLooper);
+  addKeyListener(&mKeyboard);
   addAndMakeVisible(mKeyboard);
   addAndMakeVisible(mMouse);
 
+  setWantsKeyboardFocus(true);
   setSize(800, 500);
 }
 

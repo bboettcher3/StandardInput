@@ -1,12 +1,18 @@
 #include "KeyboardComponent.h"
 
 //==============================================================================
-KeyboardComponent::KeyboardComponent() {}
+KeyboardComponent::KeyboardComponent() {
+  for (int i = 0; i < Utils::NUM_DEFAULT_PITCH_KEYS; ++i) {
+    mKeys.add(Utils::Key(Utils::DEFAULT_PITCH_KEYS[i].keyCode));
+  }
+}
 
 KeyboardComponent::~KeyboardComponent() {}
 
 //==============================================================================
 void KeyboardComponent::paint(juce::Graphics& g) {
+
+
 #ifdef OVERLAY_LABELS
   g.fillAll(juce::Colours::dimgrey);
   g.setColour(juce::Colours::white);
@@ -17,4 +23,15 @@ void KeyboardComponent::paint(juce::Graphics& g) {
   g.drawRect(getLocalBounds());
 }
 
-void KeyboardComponent::resized() {}
+void KeyboardComponent::resized() {
+
+}
+
+bool KeyboardComponent::keyPressed(const juce::KeyPress& keyPress, juce::Component* originatingComponent) {
+  int code = keyPress.getKeyCode();
+  auto key = std::find_if(mKeys.begin(), mKeys.end(), [code](const Utils::Key& key) { return key.keyCode == code; });
+  if (key != mKeys.end()) {
+    key->isPressed = keyPress.isCurrentlyDown();
+  }
+  return true; 
+}
