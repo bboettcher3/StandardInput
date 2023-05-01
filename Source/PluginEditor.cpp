@@ -10,6 +10,7 @@ AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudi
   addAndMakeVisible(mLooper);
   addKeyListener(&mKeyboard);
   addAndMakeVisible(mKeyboard);
+  addKeyListener(&mMouse);
   addAndMakeVisible(mMouse);
 
   setWantsKeyboardFocus(true);

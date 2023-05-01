@@ -78,7 +78,9 @@ set(SourceFiles
     Source/Components/MouseComponent.h
     Source/Components/MouseComponent.cpp
     Source/Components/LooperComponent.h
-    Source/Components/LooperComponent.cpp)
+    Source/Components/LooperComponent.cpp
+    Source/DSP/MouseSignals.h
+    Source/DSP/MouseSignals.cpp)
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})
 
 # No, we don't want our source buried in extra nested folders
