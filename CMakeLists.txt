@@ -71,6 +71,8 @@ set(SourceFiles
     Source/PluginEditor.cpp
     Source/PluginProcessor.cpp
     Source/Utils.h
+    Source/Parameters.h
+    Source/Parameters.cpp
     Source/Components/HeaderComponent.h
     Source/Components/HeaderComponent.cpp
     Source/Components/KeyboardComponent.h

@@ -1,9 +1,10 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
+#include "Utils.h"
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudioProcessor& p)
-    : AudioProcessorEditor(&p), processorRef(p) {
+    : AudioProcessorEditor(&p), processorRef(p), mParamUI(p.ui), mLooper(p.ui) {
   juce::ignoreUnused(processorRef);
 
   addAndMakeVisible(mHeader);
@@ -22,7 +23,7 @@ AudioPluginAudioProcessorEditor::~AudioPluginAudioProcessorEditor() {}
 //==============================================================================
 void AudioPluginAudioProcessorEditor::paint(juce::Graphics& g) {
   // (Our component is opaque, so we must completely fill the background with a solid colour)
-  g.fillAll(getLookAndFeel().findColour(juce::ResizableWindow::backgroundColourId));
+  g.fillAll(juce::Colour(Utils::BG_COLOUR));
 }
 
 void AudioPluginAudioProcessorEditor::resized() { 
