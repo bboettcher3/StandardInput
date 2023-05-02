@@ -3,11 +3,12 @@
 #include <juce_gui_basics/juce_gui_basics.h>
 #include "../Utils.h"
 #include "../Parameters.h"
+#include "../PluginProcessor.h"
 
 //==============================================================================
 class LooperComponent : public juce::Component {
  public:
-  LooperComponent(ParamUI& paramUI);
+  LooperComponent(AudioPluginAudioProcessor& processor);
   ~LooperComponent();
 
   //==============================================================================
@@ -25,7 +26,7 @@ class LooperComponent : public juce::Component {
   juce::TextButton mBtnVelocity;
 
   // Bookkeeping
-  ParamUI& mParamUI;
+  AudioPluginAudioProcessor& mProcessor;
 
   // Rectangles updated on resized()
   juce::Rectangle<int> mRectPianoRoll;

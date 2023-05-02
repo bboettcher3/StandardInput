@@ -20,6 +20,8 @@ class AudioPluginAudioProcessor : public juce::AudioProcessor {
 
   void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
+  std::atomic<int>& getSampleCount() { return mTotalSamps; }
+
   juce::AudioProcessorEditor* createEditor() override;
   bool hasEditor() const override;
 
@@ -42,6 +44,7 @@ class AudioPluginAudioProcessor : public juce::AudioProcessor {
   ParamUI ui;
 
  private:
+  std::atomic<int> mTotalSamps{0};
   
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessor)
 };

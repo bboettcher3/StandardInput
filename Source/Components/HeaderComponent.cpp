@@ -1,5 +1,6 @@
 #include "HeaderComponent.h"
 #include "BinaryData.h"
+#include "../Utils.h"
 
 //==============================================================================
 HeaderComponent::HeaderComponent(): mBtnRecord("record", juce::DrawableButton::ImageOnButtonBackground) {
@@ -18,7 +19,7 @@ HeaderComponent::~HeaderComponent() {}
 //==============================================================================
 void HeaderComponent::paint(juce::Graphics& g) {
   // Draw title
-  g.setColour(juce::Colours::white);
+  g.setColour(juce::Colours::black);
   g.setFont(juce::Font(juce::String("monospace"), 35.0f, juce::Font::FontStyleFlags::bold));
   g.drawFittedText("std::input", mRectTitle, juce::Justification::centred, 1);
 
@@ -39,5 +40,5 @@ void HeaderComponent::resized() {
 
   mRectTitle = r.removeFromLeft(TITLE_WIDTH * r.getWidth());
   juce::Rectangle<int> recordPanel = r;
-  mBtnRecord.setBounds(recordPanel.withSizeKeepingCentre(recordPanel.getHeight(), recordPanel.getHeight()).reduced(10));
+  mBtnRecord.setBounds(recordPanel.withSizeKeepingCentre(recordPanel.getHeight(), recordPanel.getHeight()).reduced(Utils::PADDING));
 }

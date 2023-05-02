@@ -8,7 +8,7 @@ static constexpr int ROUNDED_AMOUNT = 5;
 static constexpr int BG_COLOUR = 0xffb7b7b7;
 
 enum PitchClass { NONE = -1, C, Cs, D, Ds, E, F, Fs, G, Gs, A, As, B, NUM_PITCH_CLASSES };
-static std::array<juce::String, NUM_PITCH_CLASSES> PITCH_CLASS_NAMES = {"C", "Cs", "D", "Ds", "E", "F", "Fs", "G", "Gs", "A", "As", "B"};
+static std::array<juce::String, NUM_PITCH_CLASSES> PITCH_CLASS_NAMES = {"C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"};
 
 enum InputTypeFlags {
   PITCH = 1,

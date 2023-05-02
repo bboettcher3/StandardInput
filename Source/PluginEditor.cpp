@@ -4,7 +4,7 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudioProcessor& p)
-    : AudioProcessorEditor(&p), processorRef(p), mParamUI(p.ui), mLooper(p.ui) {
+    : AudioProcessorEditor(&p), processorRef(p), mParamUI(p.ui), mLooper(p) {
   juce::ignoreUnused(processorRef);
 
   addAndMakeVisible(mHeader);
@@ -29,8 +29,8 @@ void AudioPluginAudioProcessorEditor::paint(juce::Graphics& g) {
 void AudioPluginAudioProcessorEditor::resized() { 
   juce::Rectangle<int> r = getLocalBounds(); 
 
-  mHeader.setBounds(r.removeFromTop(75));
-  juce::Rectangle<int> keyMousePanel = r.removeFromBottom(175);
+  mHeader.setBounds(r.removeFromTop(40));
+  juce::Rectangle<int> keyMousePanel = r.removeFromBottom(130);
   mLooper.setBounds(r);
   mKeyboard.setBounds(keyMousePanel.removeFromLeft(keyMousePanel.getWidth() / 2));
   mMouse.setBounds(keyMousePanel);
