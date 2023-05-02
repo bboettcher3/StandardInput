@@ -3,14 +3,26 @@
 #include "../Utils.h"
 
 //==============================================================================
-HeaderComponent::HeaderComponent(): mBtnRecord("record", juce::DrawableButton::ImageOnButtonBackground) {
-  std::unique_ptr<juce::Drawable> recEmpty =
-      juce::Drawable::createFromImageData(BinaryData::record_empty_svg, BinaryData::record_empty_svgSize);
-  std::unique_ptr<juce::Drawable> recFilled =
-      juce::Drawable::createFromImageData(BinaryData::record_filled_svg, BinaryData::record_filled_svgSize);
-  mBtnRecord.setImages(recFilled.get(), recFilled.get(), recFilled.get(), recFilled.get(), recFilled.get(), recFilled.get(),
-                       recFilled.get(), recFilled.get());
+HeaderComponent::HeaderComponent()
+    : mBtnRecord("record", juce::DrawableButton::ImageOnButtonBackground),
+      mBtnPlay("play", juce::DrawableButton::ImageOnButtonBackground),
+      mBtnDub("dub", juce::DrawableButton::ImageOnButtonBackground) {
+  std::unique_ptr<juce::Drawable> recSvg =
+      juce::Drawable::createFromImageData(BinaryData::record_svg, BinaryData::record_svgSize);
+  recSvg->replaceColour(juce::Colours::black, juce::Colours::white);
+  mBtnRecord.setImages(recSvg.get());
   addAndMakeVisible(mBtnRecord);
+
+  std::unique_ptr<juce::Drawable> playSvg = juce::Drawable::createFromImageData(BinaryData::play_svg, BinaryData::play_svgSize);
+  playSvg->replaceColour(juce::Colours::black, juce::Colours::white);
+  mBtnPlay.setImages(playSvg.get());
+  addAndMakeVisible(mBtnPlay);
+
+  std::unique_ptr<juce::Drawable> dubSvg =
+      juce::Drawable::createFromImageData(BinaryData::overdub_svg, BinaryData::overdub_svgSize);
+  dubSvg->replaceColour(juce::Colours::black, juce::Colours::white);
+  mBtnDub.setImages(dubSvg.get());
+  addAndMakeVisible(mBtnDub);
 
 }
 
@@ -36,9 +48,12 @@ void HeaderComponent::paint(juce::Graphics& g) {
 }
 
 void HeaderComponent::resized() { 
-  juce::Rectangle<int> r = getLocalBounds();
+  juce::Rectangle<int> r = getLocalBounds().reduced(Utils::PADDING);
 
   mRectTitle = r.removeFromLeft(TITLE_WIDTH * r.getWidth());
-  juce::Rectangle<int> recordPanel = r;
-  mBtnRecord.setBounds(recordPanel.withSizeKeepingCentre(recordPanel.getHeight(), recordPanel.getHeight()).reduced(Utils::PADDING));
+  mBtnPlay.setBounds(r.removeFromLeft(r.getHeight()));
+  r.removeFromLeft(Utils::PADDING);
+  mBtnRecord.setBounds(r.removeFromLeft(r.getHeight()));
+  r.removeFromLeft(Utils::PADDING);
+  mBtnDub.setBounds(r.removeFromLeft(r.getHeight()));
 }

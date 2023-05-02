@@ -93,8 +93,9 @@ source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Source PREFIX "" FILES ${SourceFil
 
 # Setup our binary data as a target
 set(ResourceFiles
-    Resources/record_empty.svg
-    Resources/record_filled.svg)
+    Resources/record.svg
+    Resources/play.svg
+    Resources/overdub.svg)
 juce_add_binary_data(Assets SOURCES ${ResourceFiles})
 
 # Required for Linux happiness:

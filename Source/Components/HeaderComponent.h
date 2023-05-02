@@ -16,7 +16,9 @@ class HeaderComponent : public juce::Component {
   static constexpr float TITLE_WIDTH = 0.5f;
 
   // Components
+  juce::DrawableButton mBtnPlay;
   juce::DrawableButton mBtnRecord;
+  juce::DrawableButton mBtnDub;
 
   // Rectangles updated when resize is called
   juce::Rectangle<int> mRectTitle;
