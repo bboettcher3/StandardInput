@@ -30,8 +30,5 @@ class AudioPluginAudioProcessorEditor : public juce::AudioProcessorEditor {
   KeyboardComponent mKeyboard;
   MouseComponent mMouse;
 
-  // Bookkeeping 
-  ParamUI& mParamUI;
-
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessorEditor)
 };

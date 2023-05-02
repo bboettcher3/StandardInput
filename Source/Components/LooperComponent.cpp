@@ -7,30 +7,30 @@ LooperComponent::LooperComponent(AudioPluginAudioProcessor& processor)
   mBtnPitch.setColour(juce::TextButton::buttonOnColourId, juce::Colours::black);
   mBtnPitch.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
   mBtnPitch.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
-  mBtnPitch.setToggleState(mProcessor.ui.inputPitch, juce::dontSendNotification);
+  mBtnPitch.setToggleState(mProcessor.params.ui.inputPitch, juce::dontSendNotification);
   mBtnPitch.onClick = [this]() {
     mBtnPitch.setToggleState(!mBtnPitch.getToggleState(), juce::dontSendNotification);
-    mProcessor.ui.inputPitch = mBtnPitch.getToggleState();
+    mProcessor.params.ui.inputPitch = mBtnPitch.getToggleState();
   };
   addAndMakeVisible(mBtnPitch);
   mBtnRhythm.setColour(juce::TextButton::buttonColourId, juce::Colour(0xffcccccc));
   mBtnRhythm.setColour(juce::TextButton::buttonOnColourId, juce::Colours::black);
   mBtnRhythm.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
   mBtnRhythm.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
-  mBtnRhythm.setToggleState(mProcessor.ui.inputRhythm, juce::dontSendNotification);
+  mBtnRhythm.setToggleState(mProcessor.params.ui.inputRhythm, juce::dontSendNotification);
   mBtnRhythm.onClick = [this]() {
     mBtnRhythm.setToggleState(!mBtnRhythm.getToggleState(), juce::dontSendNotification);
-    mProcessor.ui.inputRhythm = mBtnRhythm.getToggleState();
+    mProcessor.params.ui.inputRhythm = mBtnRhythm.getToggleState();
   };
   addAndMakeVisible(mBtnRhythm);
   mBtnVelocity.setColour(juce::TextButton::buttonColourId, juce::Colour(0xffcccccc));
   mBtnVelocity.setColour(juce::TextButton::buttonOnColourId, juce::Colours::black);
   mBtnVelocity.setColour(juce::TextButton::textColourOffId, juce::Colours::black);
   mBtnVelocity.setColour(juce::TextButton::textColourOnId, juce::Colours::white);
-  mBtnVelocity.setToggleState(mProcessor.ui.inputVelocity, juce::dontSendNotification);
+  mBtnVelocity.setToggleState(mProcessor.params.ui.inputVelocity, juce::dontSendNotification);
   mBtnVelocity.onClick = [this]() {
     mBtnVelocity.setToggleState(!mBtnVelocity.getToggleState(), juce::dontSendNotification);
-    mProcessor.ui.inputVelocity = mBtnVelocity.getToggleState();
+    mProcessor.params.ui.inputVelocity = mBtnVelocity.getToggleState();
   };
   addAndMakeVisible(mBtnVelocity);
 }
@@ -46,7 +46,7 @@ void LooperComponent::paint(juce::Graphics& g) {
 
   // Draw piano roll and lines across timeline
   int keyY = mRectPianoRoll.getBottom();
-  int keyHeight = mRectPianoRoll.getHeight() / (mProcessor.ui.pianoRollVertScale * NUM_DEFAULT_PIANO_KEYS);
+  int keyHeight = mRectPianoRoll.getHeight() / (mProcessor.params.ui.pianoRollVertScale * NUM_DEFAULT_PIANO_KEYS);
   int pitch = Utils::C;
   juce::Rectangle<int> pianoRoll = mRectPianoRoll;
   int keyBarWidth = getWidth() - Utils::PADDING * 2;
@@ -78,6 +78,11 @@ void LooperComponent::paint(juce::Graphics& g) {
     pitch++;
   }
 
+  // Draw timeline
+  g.setColour(juce::Colours::black);
+  g.drawRect(mRectTimeline, 2);
+
+
 #ifdef OVERLAY_LABELS
   g.fillAll(juce::Colours::darkgrey);
 
@@ -103,5 +108,6 @@ void LooperComponent::resized() {
   r.removeFromTop(Utils::PADDING + 2); // Bottom separator and line thickness
   r.removeFromTop(Utils::PADDING);
 
-  mRectPianoRoll = r.removeFromLeft(WIDTH_PIANO_ROLL);
+  mRectPianoRoll = r.removeFromLeft(WIDTH_PIANO_ROLL).withSizeKeepingCentre(WIDTH_PIANO_ROLL, r.getHeight() - 4);
+  mRectTimeline = r;
 }

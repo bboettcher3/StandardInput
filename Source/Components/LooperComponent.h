@@ -30,6 +30,7 @@ class LooperComponent : public juce::Component {
 
   // Rectangles updated on resized()
   juce::Rectangle<int> mRectPianoRoll;
+  juce::Rectangle<int> mRectTimeline;
 
   inline bool isBlackKey(Utils::PitchClass pitchClass) { return ((1 << (pitchClass)) & 0x054a) != 0; }
 

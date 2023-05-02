@@ -4,7 +4,7 @@
 
 //==============================================================================
 AudioPluginAudioProcessorEditor::AudioPluginAudioProcessorEditor(AudioPluginAudioProcessor& p)
-    : AudioProcessorEditor(&p), processorRef(p), mParamUI(p.ui), mLooper(p) {
+    : AudioProcessorEditor(&p), processorRef(p), mHeader(p), mLooper(p) {
   juce::ignoreUnused(processorRef);
 
   addAndMakeVisible(mHeader);

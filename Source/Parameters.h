@@ -17,15 +17,18 @@
 #include "Utils.h"
 
 namespace ParamIDs {
-//static juce::String genSolo{"_solo_gen"};
+static juce::String bpm{"bpm"};
+static juce::String loopLength{"loopLength"};
 }  // namespace ParamIDs
 
 namespace ParamRanges {
-//static juce::NormalisableRange<float> GAIN(0.0f, 1.0f);
+static juce::NormalisableRange<float> BPM(0.01f, 300.0f, 0.1f);
+static juce::NormalisableRange<float> LOOP_LENGTH(0.01f, 32.0f, 0.1f);
 }  // namespace ParamRanges
 
 namespace ParamDefaults {
-//static float GAIN_DEFAULT = 0.8f;
+static double BPM = 120.0;
+static double LOOP_LENGTH = 4.0; // In bars
 }  // namespace ParamDefaults
 
 struct ParamHelper {
@@ -40,6 +43,36 @@ struct ParamHelper {
   static void setParam(juce::AudioParameterInt* param, int newValue) { *param = newValue; }
   static void setParam(juce::AudioParameterBool* param, bool newValue) { *param = newValue; }
   static void setParam(juce::AudioParameterChoice* param, int newValue) { *param = newValue; }
+};
+
+/**
+ * The current transport settings (bpm, loop length, etc.)
+ */
+class ParamTransport {
+ public:
+  ParamTransport() {}
+  ~ParamTransport() {}
+
+  void addParams(juce::AudioProcessor& p);
+
+  void addListener(juce::AudioProcessorParameter::Listener* listener) {
+    bpm->addListener(listener);
+    loopLength->addListener(listener);
+  }
+  void removeListener(juce::AudioProcessorParameter::Listener* listener) {
+    bpm->removeListener(listener);
+    loopLength->removeListener(listener);
+  }
+
+  void resetParams(bool fullClear = true) {
+    ParamHelper::setParam(bpm, ParamDefaults::BPM);
+    ParamHelper::setParam(loopLength, ParamDefaults::LOOP_LENGTH);
+  }
+
+  juce::AudioParameterFloat* bpm;
+  juce::AudioParameterFloat* loopLength;
+
+  JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(ParamTransport)
 };
 
 /**
@@ -76,3 +109,8 @@ struct ParamUI {
   bool inputVelocity = false;
   double pianoRollVertScale = 1.0f;
 };
+
+typedef struct Parameters {
+  ParamUI ui;
+  ParamTransport transport;
+} Parameters;

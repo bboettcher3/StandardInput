@@ -20,7 +20,14 @@ class AudioPluginAudioProcessor : public juce::AudioProcessor {
 
   void processBlock(juce::AudioBuffer<float>&, juce::MidiBuffer&) override;
 
+  double getSampleRate() { return mSampleRate; }
   std::atomic<int>& getSampleCount() { return mTotalSamps; }
+  void setIsPlaying(bool isPlaying) { 
+    mIsPlaying = isPlaying;
+  }
+  void setIsRecording(bool isRecording) { 
+    mIsRecording = isRecording;
+  }
 
   juce::AudioProcessorEditor* createEditor() override;
   bool hasEditor() const override;
@@ -41,10 +48,14 @@ class AudioPluginAudioProcessor : public juce::AudioProcessor {
   void getStateInformation(juce::MemoryBlock& destData) override;
   void setStateInformation(const void* data, int sizeInBytes) override;
   
-  ParamUI ui;
+  Parameters params;
 
  private:
+   // Bookkeeping
+  double mSampleRate;
   std::atomic<int> mTotalSamps{0};
+  bool mIsPlaying = false;
+  bool mIsRecording = false;
   
   JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(AudioPluginAudioProcessor)
 };

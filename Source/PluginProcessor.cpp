@@ -11,6 +11,8 @@ AudioPluginAudioProcessor::AudioPluginAudioProcessor()
                          .withOutput("Output", juce::AudioChannelSet::stereo(), true)
 #endif
       ) {
+
+  params.transport.addParams(*this);
 }
 
 AudioPluginAudioProcessor::~AudioPluginAudioProcessor() {}
@@ -62,8 +64,7 @@ void AudioPluginAudioProcessor::changeProgramName(int index, const juce::String&
 
 //==============================================================================
 void AudioPluginAudioProcessor::prepareToPlay(double sampleRate, int samplesPerBlock) {
-  // Use this method as the place to do any pre-playback
-  // initialisation that you need..
+  mSampleRate = sampleRate;
   juce::ignoreUnused(sampleRate, samplesPerBlock);
 }
 
@@ -99,6 +100,22 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
   auto totalNumInputChannels = getTotalNumInputChannels();
   auto totalNumOutputChannels = getTotalNumOutputChannels();
 
+  // Get playhead information
+  juce::AudioPlayHead* playhead = getPlayHead();
+  if (playhead != nullptr) {
+    auto pos = playhead->getPosition();
+    if (pos.hasValue()) {
+      auto bpm = pos->getBpm();
+      if (bpm.hasValue()) {
+        if (params.transport.bpm->get() != *bpm) ParamHelper::setParam(params.transport.bpm, *bpm);
+      }
+      auto loopPoints = pos->getLoopPoints();
+      if (loopPoints.hasValue()) {
+        // TODO: set loop length
+      }
+    }
+  }
+
   // In case we have more outputs than inputs, this code clears any output
   // channels that didn't contain input data, (because these aren't
   // guaranteed to be empty - they may contain garbage).
@@ -118,6 +135,14 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
     juce::ignoreUnused(channelData);
     // ..do something to the data...
   }
+
+
+  // Increment or reset sample count
+  if (mIsPlaying)
+    mTotalSamps.store(mTotalSamps.load() + buffer.getNumSamples());
+  else
+    mTotalSamps.store(0);
+  
 }
 
 //==============================================================================
@@ -131,13 +156,13 @@ juce::AudioProcessorEditor* AudioPluginAudioProcessor::createEditor() { return n
 void AudioPluginAudioProcessor::getStateInformation(juce::MemoryBlock& destData) {
   juce::XmlElement xml("PluginState");
 
-  juce::XmlElement* params = new juce::XmlElement("AudioParams");
+  juce::XmlElement* paramsXml = new juce::XmlElement("AudioParams");
   for (auto& param : getParameters()) {
-    params->setAttribute(ParamHelper::getParamID(param), param->getValue());
+    paramsXml->setAttribute(ParamHelper::getParamID(param), param->getValue());
   }
 
-  xml.addChildElement(params);
-  xml.addChildElement(ui.getXml());
+  xml.addChildElement(paramsXml);
+  xml.addChildElement(params.ui.getXml());
 
   copyXmlToBinary(xml, destData);
 }
@@ -146,16 +171,16 @@ void AudioPluginAudioProcessor::setStateInformation(const void* data, int sizeIn
   auto xml = getXmlFromBinary(data, sizeInBytes);
 
   if (xml != nullptr) {
-    auto params = xml->getChildByName("AudioParams");
-    if (params != nullptr) {
+    auto paramsXml = xml->getChildByName("AudioParams");
+    if (paramsXml != nullptr) {
       for (auto& param : getParameters()) {
-        param->setValueNotifyingHost(params->getDoubleAttribute(ParamHelper::getParamID(param), param->getValue()));
+        param->setValueNotifyingHost(paramsXml->getDoubleAttribute(ParamHelper::getParamID(param), param->getValue()));
       }
     }
 
-    params = xml->getChildByName("ParamUI");
-    if (params != nullptr) {
-      ui.setXml(params);
+    paramsXml = xml->getChildByName("ParamUI");
+    if (paramsXml != nullptr) {
+      params.ui.setXml(paramsXml);
     }
   }
 }
