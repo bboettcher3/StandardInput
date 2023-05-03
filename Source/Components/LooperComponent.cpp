@@ -67,7 +67,7 @@ void LooperComponent::paint(juce::Graphics& g) {
     g.fillRect(keyRect);
     g.setColour(juce::Colours::black);
     g.drawLine(keyRect.getX(), keyRect.getBottom(), keyRect.getRight(), keyRect.getBottom());
-    if (pitch % 12 == Utils::PitchClass::C) {
+    if (pitch % 12 == Utils::PitchClass::C && keyRect.getHeight() == keyHeight) {
       g.setColour(juce::Colours::black);
       int octave = (pitch / 12.0f);
       g.drawFittedText(Utils::PITCH_CLASS_NAMES[Utils::PitchClass::C] + juce::String(octave), keyRect,
@@ -78,9 +78,28 @@ void LooperComponent::paint(juce::Graphics& g) {
     pitch++;
   }
 
-  // Draw timeline
+  // Draw beat and bar ticks
+  int barInterval = mRectTimeline.getWidth() /(int)mProcessor.params.transport.loopLength->get();
+  int beatInterval = barInterval / DEFAULT_TIME_SIG_NUM;
+  const float beatDashes[2] = {1.5, 3};
+  for (int bar = 0; bar < mProcessor.params.transport.loopLength->get(); ++bar) {
+    g.setColour(juce::Colours::black.withAlpha(0.7f));
+    int barX = mRectTimeline.getX() + (barInterval * bar);
+    g.drawLine(barX, mRectTimeline.getY(), barX, mRectTimeline.getBottom());
+    g.setColour(juce::Colours::black.withAlpha(0.7f));
+    if (bar > 0) {
+      for (int beat = 1; beat < DEFAULT_TIME_SIG_NUM; ++beat) {
+        int beatX = barX - (beatInterval * beat);
+        juce::Line<float> beatLine(beatX, mRectTimeline.getY(), beatX, mRectTimeline.getBottom());
+        g.drawDashedLine(beatLine, beatDashes, 2);
+      }
+    }
+  }
+
+  // Draw timeline border lines
   g.setColour(juce::Colours::black);
-  g.drawRect(mRectTimeline, 2);
+  g.drawRect(mRectTimeline.withHeight(HEIGHT_LOOP_BAR));
+  g.drawLine(mRectTimeline.getX(), mRectTimeline.getBottom(), mRectTimeline.getRight(), mRectTimeline.getBottom());
 
 
 #ifdef OVERLAY_LABELS
@@ -108,6 +127,6 @@ void LooperComponent::resized() {
   r.removeFromTop(Utils::PADDING + 2); // Bottom separator and line thickness
   r.removeFromTop(Utils::PADDING);
 
-  mRectPianoRoll = r.removeFromLeft(WIDTH_PIANO_ROLL).withSizeKeepingCentre(WIDTH_PIANO_ROLL, r.getHeight() - 4);
+  mRectPianoRoll = r.removeFromLeft(WIDTH_PIANO_ROLL).withTrimmedTop(HEIGHT_LOOP_BAR);
   mRectTimeline = r;
 }

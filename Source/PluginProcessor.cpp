@@ -104,6 +104,7 @@ void AudioPluginAudioProcessor::processBlock(juce::AudioBuffer<float>& buffer, j
   juce::AudioPlayHead* playhead = getPlayHead();
   if (playhead != nullptr) {
     auto pos = playhead->getPosition();
+    mPositionInfo = pos;
     if (pos.hasValue()) {
       auto bpm = pos->getBpm();
       if (bpm.hasValue()) {

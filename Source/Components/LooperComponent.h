@@ -17,8 +17,11 @@ class LooperComponent : public juce::Component {
 
  private:
   static constexpr int HEIGHT_INPUT_TYPES = 30;
+  static constexpr int HEIGHT_LOOP_BAR = 10;
   static constexpr int WIDTH_PIANO_ROLL = 50;
   static constexpr int NUM_DEFAULT_PIANO_KEYS = 24;
+  static constexpr int DEFAULT_TIME_SIG_NUM= 4;
+  static constexpr int DEFAULT_TIME_SIG_DENOM = 4;
 
   // Components
   juce::TextButton mBtnPitch;

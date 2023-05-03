@@ -22,6 +22,7 @@ class AudioPluginAudioProcessor : public juce::AudioProcessor {
 
   double getSampleRate() { return mSampleRate; }
   std::atomic<int>& getSampleCount() { return mTotalSamps; }
+  juce::Optional<juce::AudioPlayHead::PositionInfo> getPositionInfo() { return mPositionInfo; }
   void setIsPlaying(bool isPlaying) { 
     mIsPlaying = isPlaying;
   }
@@ -54,6 +55,7 @@ class AudioPluginAudioProcessor : public juce::AudioProcessor {
    // Bookkeeping
   double mSampleRate;
   std::atomic<int> mTotalSamps{0};
+  juce::Optional<juce::AudioPlayHead::PositionInfo> mPositionInfo;
   bool mIsPlaying = false;
   bool mIsRecording = false;
   
