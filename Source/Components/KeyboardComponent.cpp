@@ -9,12 +9,22 @@ KeyboardComponent::~KeyboardComponent() {}
 //==============================================================================
 void KeyboardComponent::paint(juce::Graphics& g) {
   // Draw key rects
+  juce::Font noteFont(16.0f, juce::Font::bold);
+  juce::Font letterFont(10.0f, juce::Font::plain);
   for (Key& key : mKeys) {
     juce::Colour col = key.isPressed ? juce::Colours::lightgrey : juce::Colours::white;
     g.setColour(col);
     g.fillRoundedRectangle(key.rect.toFloat(), Utils::ROUNDED_AMOUNT);
     g.setColour(juce::Colours::black);
-    g.drawFittedText(juce::String(&key.keyChar, 1), key.rect, juce::Justification::centred, 1);
+    int charWidth = key.rect.getWidth() / 5;
+    g.setFont(letterFont);
+    g.drawFittedText(juce::String(&key.keyChar, 1), key.rect.withSize(charWidth, charWidth).translated(2, 2),
+                     juce::Justification::centred, 1);
+    if (key.midiNote != Utils::NONE) {
+      g.setFont(noteFont);
+      g.drawFittedText(Utils::PITCH_CLASS_NAMES[key.midiNote % Utils::NUM_PITCH_CLASSES], key.rect, juce::Justification::centred,
+                       1);
+    }
   }
 
 #ifdef OVERLAY_LABELS
