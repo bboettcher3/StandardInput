@@ -8,7 +8,17 @@ set(PROJECT_NAME "StandardInput")
 
 # Set the plugin formats you'll be building here.
 # Valid formats: AAX Unity VST AU AUv3 Standalone
-set(FORMATS AU VST3 AUv3 Standalone)
+set(FORMATS VST3 Standalone)
+
+# Build LV2 only on Linux
+if(UNIX AND NOT APPLE)
+    list(APPEND JUCE_FORMATS LV2)
+endif()
+
+# Build AU only on MacOS
+if(APPLE)
+    list(APPEND FORMATS AU)
+endif()
 
 # Reads in VERSION file and sticks in it CURRENT_VERSION variable
 # Be sure the file has no newlines
@@ -48,16 +58,16 @@ juce_add_plugin("${PROJECT_NAME}"
     # VERSION ...                               # Set this if the plugin version is different to the project version
     # ICON_BIG ...                              # ICON_* arguments specify a path to an image file to use as an icon for the Standalone
     # ICON_SMALL ...
-    COMPANY_NAME strangeloops
-    BUNDLE_ID com.strangeloops.standardinput
+    COMPANY_NAME StrangeLoops
+    BUNDLE_ID com.StrangeLoops.standardinput
     # IS_SYNTH TRUE/FALSE                       # Is this a synth or an effect?
     # NEEDS_MIDI_INPUT TRUE/FALSE               # Does the plugin need midi input?
     # NEEDS_MIDI_OUTPUT TRUE/FALSE              # Does the plugin need midi output?
     # IS_MIDI_EFFECT TRUE/FALSE                 # Is this plugin a MIDI effect?
     # EDITOR_WANTS_KEYBOARD_FOCUS TRUE/FALSE    # Does the editor need keyboard focus?
     COPY_PLUGIN_AFTER_BUILD TRUE # On MacOS, plugin will be copied to /Users/you/Library/Audio/Plug-Ins/
-    PLUGIN_MANUFACTURER_CODE Pamp               # This has to be one uppercase, rest lower for AU formats
-    PLUGIN_CODE P001                            # A unique four-character plugin id with at least one upper-case character
+    PLUGIN_MANUFACTURER_CODE SLoo               # This has to be one uppercase, rest lower for AU formats
+    PLUGIN_CODE SL02                            # A unique four-character plugin id with at least one upper-case character
     FORMATS "${FORMATS}"
     PRODUCT_NAME "${PROJECT_NAME}")        # The name of the final executable, which can differ from the target name
 
