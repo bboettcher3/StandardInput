@@ -1,2 +1,3 @@
 # StandardInput
- A toolkit for expressive music creation using generic input devices
+
+A toolkit for creating expressive MIDI and OSC using generic input devices
